@@ -15,7 +15,7 @@ extension AddTempTarget {
         @Published var newPresetName = ""
         @Published var presets: [TempTarget] = []
         @Published var percentage = 100.0
-        @Published var maxValue: Decimal = 1.2
+        @Published var maxValue: Decimal = 2.5
         @Published var viewPercantage = false
         @Published var hbt: Double = 160
         @Published var saveSettings: Bool = false
