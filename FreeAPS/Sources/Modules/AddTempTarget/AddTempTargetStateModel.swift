@@ -16,17 +16,16 @@ extension AddTempTarget {
         @Published var presets: [TempTarget] = []
         @Published var percentage = 100.0
         @Published var maxValue: Decimal = 2.5
-        @Published var viewPercantage = false
+        @Published var viewPercantage = true
         @Published var hbt: Double = 160
-        @Published var saveSettings: Bool = false
+        @Published var saveSettings: Bool = true
 
         private(set) var units: GlucoseUnits = .mmolL
 
         override func subscribe() {
             units = settingsManager.settings.units
             presets = storage.presets()
-            maxValue = settingsManager.preferences.autosensMax
-        }
+            }
 
         func enact() {
             guard duration > 0 else {
