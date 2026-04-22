@@ -112,33 +112,33 @@ jobs:
                   
   # Checks for changes in upstream repository; if changes exist prompts sync for build
   # Performs keepalive to avoid stale fork
-  check_latest_from_upstream:
-    needs: [check_certs, check_alive_and_permissions]
-    runs-on: ubuntu-latest
-    name: Check upstream and keep alive
-    outputs:
-      NEW_COMMITS: ${{ steps.sync.outputs.has_new_commits }}
-      ABORT_SYNC: ${{ steps.check_branch.outputs.ABORT_SYNC }}
+  # check_latest_from_upstream:
+  #  needs: [check_certs, check_alive_and_permissions]
+  #  runs-on: ubuntu-latest
+  #  name: Check upstream and keep alive
+  #  outputs:
+  #    NEW_COMMITS: ${{ steps.sync.outputs.has_new_commits }}
+  #    ABORT_SYNC: ${{ steps.check_branch.outputs.ABORT_SYNC }}
 
-    steps:
-      - name: Check if running on main or dev branch
-        if: |
-          needs.check_alive_and_permissions.outputs.WORKFLOW_PERMISSION == 'true' &&
-          (vars.SCHEDULED_BUILD != 'false' || vars.SCHEDULED_SYNC != 'false')
-        id: check_branch
-        run: |
-          if [ "${GITHUB_REF##*/}" = "main" ]; then
-            echo "Running on main branch"
-            echo "ALIVE_BRANCH=${ALIVE_BRANCH_MAIN}" >> $GITHUB_OUTPUT
-            echo "ABORT_SYNC=false" >> $GITHUB_OUTPUT
-          elif [ "${GITHUB_REF##*/}" = "dev" ]; then
-            echo "Running on dev branch"
-            echo "ALIVE_BRANCH=${ALIVE_BRANCH_DEV}" >> $GITHUB_OUTPUT
-            echo "ABORT_SYNC=false" >> $GITHUB_OUTPUT
-          else
-            echo "Not running on main or dev branch"
-            echo "ABORT_SYNC=true" >> $GITHUB_OUTPUT
-          fi
+  #  steps:
+  #    - name: Check if running on main or dev branch
+  #      if: |
+  #        needs.check_alive_and_permissions.outputs.WORKFLOW_PERMISSION == 'true' &&
+  #        (vars.SCHEDULED_BUILD != 'false' || vars.SCHEDULED_SYNC != 'false')
+  #      id: check_branch
+  #      run: |
+  #        if [ "${GITHUB_REF##*/}" = "main" ]; then
+  #          echo "ALIVE_BRANCH=${ALIVE_BRANCH_MAIN}" >> $GITHUB_OUTPUT
+  #          echo "Running on main branch"
+  #          echo "ABORT_SYNC=false" >> $GITHUB_OUTPUT
+  #        elif [ "${GITHUB_REF##*/}" = "dev" ]; then
+  #          echo "Running on dev branch"
+  #          echo "ALIVE_BRANCH=${ALIVE_BRANCH_DEV}" >> $GITHUB_OUTPUT
+  #        else
+  #          echo "ABORT_SYNC=false" >> $GITHUB_OUTPUT
+  #          echo "Not running on main or dev branch"
+  #          echo "ABORT_SYNC=true" >> $GITHUB_OUTPUT
+  #        fi
 
       - name: Checkout target repo
         if: |
@@ -163,23 +163,23 @@ jobs:
       #    upstream_sync_repo: ${{ env.UPSTREAM_REPO }}
 
       # Display a sample message based on the sync output var 'has_new_commits'
-      - name: New commits found
-        if: |
-          needs.check_alive_and_permissions.outputs.WORKFLOW_PERMISSION == 'true' &&
-          vars.SCHEDULED_SYNC != 'false' && steps.sync.outputs.has_new_commits == 'true'
-        run: echo "New commits were found to sync."
+      #- name: New commits found
+      #  if: |
+      #    needs.check_alive_and_permissions.outputs.WORKFLOW_PERMISSION == 'true' &&
+      #    vars.SCHEDULED_SYNC != 'false' && steps.sync.outputs.has_new_commits == 'true'
+      #  run: echo "New commits were found to sync."
 
-      - name: No new commits
-        if: |
-          needs.check_alive_and_permissions.outputs.WORKFLOW_PERMISSION == 'true' && 
-          vars.SCHEDULED_SYNC != 'false' && steps.sync.outputs.has_new_commits == 'false'
-        run: echo "There were no new commits."
+      #- name: No new commits
+      #    needs.check_alive_and_permissions.outputs.WORKFLOW_PERMISSION == 'true' && 
+      #  if: |
+      #    vars.SCHEDULED_SYNC != 'false' && steps.sync.outputs.has_new_commits == 'false'
+      #  run: echo "There were no new commits."
 
-      - name: Show value of 'has_new_commits'
-        if: needs.check_alive_and_permissions.outputs.WORKFLOW_PERMISSION == 'true' && vars.SCHEDULED_SYNC != 'false' && steps.check_branch.outputs.ABORT_SYNC == 'false'
-        run: |
-          echo ${{ steps.sync.outputs.has_new_commits }}
-          echo "NEW_COMMITS=${{ steps.sync.outputs.has_new_commits }}" >> $GITHUB_OUTPUT
+      #- name: Show value of 'has_new_commits'
+      #  if: needs.check_alive_and_permissions.outputs.WORKFLOW_PERMISSION == 'true' && vars.SCHEDULED_SYNC != 'false' && steps.check_branch.outputs.ABORT_SYNC == 'false'
+      #  run: |
+      #    echo ${{ steps.sync.outputs.has_new_commits }}
+      #    echo "NEW_COMMITS=${{ steps.sync.outputs.has_new_commits }}" >> $GITHUB_OUTPUT
 
       # Keep repository "alive": add empty commits to ALIVE_BRANCH after "time_elapsed" days of inactivity to avoid inactivation of scheduled workflows
       - name: Keep alive
