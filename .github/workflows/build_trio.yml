@@ -204,7 +204,7 @@ jobs:
   # Builds Trio
   build:
     name: Build
-    needs: [check_certs, check_alive_and_permissions, check_latest_from_upstream]
+    needs: [check_certs, check_alive_and_permissions]
     runs-on: macos-15
     permissions:
       contents: write
